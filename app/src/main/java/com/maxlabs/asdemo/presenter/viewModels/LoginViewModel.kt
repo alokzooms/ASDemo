@@ -1,6 +1,7 @@
 package com.maxlabs.asdemo.presenter.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.util.Patterns
@@ -25,14 +26,21 @@ class LoginViewModel(private val application: Application, private val loginUsec
     private val _loginResult = MutableLiveData<Resource<String>>()
     val loginResult: LiveData<Resource<String>> = _loginResult
 
+    val TAG = "LoginViewModel"
     /**
-     *
+     * Method to login
+     * username: String:email or username
+     * password: String: password
      */
     fun login(username: String, password: String) {
         if (NetworkUtil.isInternetAvailable(application)) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val result = loginUsecase.execute(AuthenticationModel(username, password))
-                _loginResult.postValue(result)
+            try {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val result = loginUsecase.execute(AuthenticationModel(username, password))
+                    _loginResult.postValue(result)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "login: ${e.message}")
             }
         }
     }

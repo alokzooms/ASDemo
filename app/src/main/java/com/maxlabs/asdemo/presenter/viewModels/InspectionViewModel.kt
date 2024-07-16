@@ -1,5 +1,6 @@
 package com.maxlabs.asdemo.presenter.viewModels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,13 +19,18 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
     private val _inspectionSubmitResult = MutableLiveData<Resource<String>>()
     val inspectionSubmitResult: LiveData<Resource<String>> = _inspectionSubmitResult
 
+    val TAG = "InspectionViewModel"
     /**
      * Get inspections from the API
      */
     fun getInspectionFromAPI() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = inspectionUsecase.execute()
-            _inspectionResult.postValue(result)
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val result = inspectionUsecase.execute()
+                _inspectionResult.postValue(result)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "getInspectionFromAPI: ${e.message}")
         }
     }
 
@@ -32,9 +38,14 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      * Submit inspections to the API
      */
     fun submitInspection(inspection: Inspection) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = inspectionUsecase.submitInspection(inspection)
-            _inspectionSubmitResult.postValue(result)
+
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val result = inspectionUsecase.submitInspection(inspection)
+                _inspectionSubmitResult.postValue(result)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "submitInspection: ${e.message}")
         }
     }
 
@@ -42,9 +53,14 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      * Get inspections from the database
      */
     fun getInspectionFromDB() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = inspectionUsecase.getInspectionFromDB()
-            _inspectionResult.postValue(result)
+
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val result = inspectionUsecase.getInspectionFromDB()
+                _inspectionResult.postValue(result)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "getInspectionFromDB: ${e.message}")
         }
     }
 
@@ -52,8 +68,12 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      * Update selected answer choice in the database
      */
     fun updateSelectedAnswer(questionId: Int, selectedAnswerChoiceId: Int) {
-        viewModelScope.launch {
-            inspectionUsecase.updateSelectedAnswerChoice(questionId, selectedAnswerChoiceId)
+        try {
+            viewModelScope.launch {
+                inspectionUsecase.updateSelectedAnswerChoice(questionId, selectedAnswerChoiceId)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "updateSelectedAnswer: ${e.message}")
         }
     }
 
@@ -61,8 +81,12 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      * Clear all data from the database
      */
     fun clearAllData() {
-        viewModelScope.launch {
-            inspectionUsecase.clearAllData()
+        try {
+            viewModelScope.launch {
+                inspectionUsecase.clearAllData()
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "clearAllData: ${e.message}")
         }
     }
 
