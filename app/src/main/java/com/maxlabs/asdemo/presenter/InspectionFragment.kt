@@ -35,7 +35,7 @@ class InspectionFragment : Fragment() {
     //private var totalScore: Float = 0f
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: Use the ViewModel
+
     }
 
     override fun onCreateView(
