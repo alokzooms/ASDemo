@@ -2,23 +2,23 @@ package com.maxlabs.asdemo.presenter.viewModels
 
 import android.app.Application
 import android.util.Log
+import android.util.Patterns
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.util.Patterns
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.maxlabs.asdemo.R
 import com.maxlabs.asdemo.model.AuthenticationModel
 import com.maxlabs.asdemo.model.usecase.LoginUsecase
 import com.maxlabs.asdemo.presenter.LoginFormState
 import com.maxlabs.asdemo.util.NetworkUtil
 import com.maxlabs.asdemo.util.Resource
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val application: Application, private val loginUsecase: LoginUsecase) : AndroidViewModel(application) {
+class LoginViewModel(private val application: Application, private val loginUsecase: LoginUsecase) :
+    AndroidViewModel(application) {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -27,6 +27,7 @@ class LoginViewModel(private val application: Application, private val loginUsec
     val loginResult: LiveData<Resource<String>> = _loginResult
 
     val TAG = "LoginViewModel"
+
     /**
      * Method to login
      * username: String:email or username
@@ -34,13 +35,13 @@ class LoginViewModel(private val application: Application, private val loginUsec
      */
     fun login(username: String, password: String) {
         if (NetworkUtil.isInternetAvailable(application)) {
-            try {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val result = loginUsecase.execute(AuthenticationModel(username, password))
-                    _loginResult.postValue(result)
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "login: ${e.message}")
+            val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
+                Log.e("Network Error", "Error connecting to server", throwable)
+            }
+
+            viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+                val result = loginUsecase.execute(AuthenticationModel(username, password))
+                _loginResult.postValue(result)
             }
         }
     }
