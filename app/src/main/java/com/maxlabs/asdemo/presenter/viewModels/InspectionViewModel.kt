@@ -20,12 +20,14 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
     private val _inspectionSubmitResult = MutableLiveData<Resource<String>>()
     val inspectionSubmitResult: LiveData<Resource<String>> = _inspectionSubmitResult
 
+    val TAG = "InspectionViewModel"
+
     /**
      * Get inspections from the API
      */
     fun getInspectionFromAPI() {
         val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
-            Log.e("Network Error", "Error connecting to server", throwable)
+            Log.e(TAG, "Error connecting to server", throwable)
         }
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val result = inspectionUsecase.execute()
@@ -38,7 +40,7 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      */
     fun submitInspection(inspection: Inspection) {
         val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
-            Log.e("Network Error", "Error connecting to server", throwable)
+            Log.e(TAG, "Error connecting to server", throwable)
         }
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val result = inspectionUsecase.submitInspection(inspection)
@@ -51,7 +53,7 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      */
     fun getInspectionFromDB() {
         val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
-            Log.e("DataBase Error", "Error while geiing data from DB", throwable)
+            Log.e(TAG, "Error while geiing data from DB", throwable)
         }
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val result = inspectionUsecase.getInspectionFromDB()
@@ -64,7 +66,7 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      */
     fun updateSelectedAnswer(questionId: Int, selectedAnswerChoiceId: Int) {
         val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
-            Log.e("DataBase Error", "Error while geiing data from DB", throwable)
+            Log.e(TAG, "Error while geiing data from DB", throwable)
         }
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             inspectionUsecase.updateSelectedAnswerChoice(questionId, selectedAnswerChoiceId)
@@ -76,7 +78,7 @@ class InspectionViewModel(private val inspectionUsecase: InspectionUsecase) : Vi
      */
     fun clearAllData() {
         val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
-            Log.e("DataBase Error", "Error while geiing data from DB", throwable)
+            Log.e(TAG, "Error while geiing data from DB", throwable)
         }
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             inspectionUsecase.clearAllData()
