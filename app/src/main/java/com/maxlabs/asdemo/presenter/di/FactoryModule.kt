@@ -16,13 +16,16 @@ import javax.inject.Singleton
 class FactoryModule {
     @Singleton
     @Provides
-    fun provideLoginViewModelFactory(application: Application,loginUsecase: LoginUsecase): LoginViewModelFactory {
+    fun provideLoginViewModelFactory(
+        application: Application,
+        loginUsecase: LoginUsecase
+    ): LoginViewModelFactory {
         return LoginViewModelFactory(application, loginUsecase)
     }
 
     @Singleton
     @Provides
-    fun provideInspectionViewModelFactory(inspectionUsecase: InspectionUsecase): InspectionViewModelFactory {
-        return InspectionViewModelFactory(inspectionUsecase)
+    fun provideInspectionViewModelFactory(application: Application,inspectionUsecase: InspectionUsecase): InspectionViewModelFactory {
+        return InspectionViewModelFactory(inspectionUsecase, application)
     }
 }

@@ -36,7 +36,7 @@ class LoginViewModel(private val application: Application, private val loginUsec
     fun login(username: String, password: String) {
         if (NetworkUtil.isInternetAvailable(application)) {
             val coroutineExceptionHandler = CoroutineExceptionHandler() { _, throwable ->
-                Log.e("Network Error", "Error connecting to server", throwable)
+                Log.e(TAG, "Error connecting to server", throwable)
             }
 
             viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
